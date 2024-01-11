@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lys.sys.mapper.CusCustomerMapper">
+    <insert id="insertIntoUserAndCustomer">
+        insert into tb_user_customer(user_id,customer_id) values (#{userId},#{customerId})
+    </insert>
+    <update id="updateByCustomerId">
+        update tb_user_customer set user_id=#{userId} where customer_id=#{customerId}
+    </update>
+
+    <select id="selectByType" resultType="java.lang.String">
+        select customer_type from cus_customer where customer_id=#{customerId};
+    </select>
+    <select id="display" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS role_count
+        from(
+                SELECT su.username,sur.role_id
+                FROM sys_user su
+                JOIN sys_user_role sur ON su.user_id=sur.user_id
+                WHERE su.username=#{username} and role_id=7
+            ) AS user_roles;
+    </select>
+    <select id="selectCustomerUser" resultType="java.lang.String">
+        SELECT sys_user.username
+        FROM tb_user_customer
+                 JOIN cus_customer ON tb_user_customer.customer_id = cus_customer.customer_id
+                 JOIN sys_user ON sys_user.user_id = tb_user_customer.user_id
+        WHERE cus_customer.customer_id=#{customerId}
+    </select>
+    <select id="queryMyCustomer" resultType="com.lys.sys.entity.CusCustomer">
+        SELECT cus_customer.*
+        FROM tb_user_customer
+                 JOIN cus_customer ON tb_user_customer.customer_id = cus_customer.customer_id
+                 JOIN sys_user ON sys_user.user_id = tb_user_customer.user_id
+        WHERE sys_user.username = #{username};
+    </select>
+    <select id="selectCountUserAndCustomer" resultType="java.lang.Long">
+        select count(*) FROM tb_user_customer where
+            user_id=#{userId}
+            and
+            customer_id=#{customerId}
+    </select>
+    <select id="selectCommonCustomer" resultType="java.lang.Long">
+        select * from cus_customer where status=0
+    </select>
+
+
+</mapper>

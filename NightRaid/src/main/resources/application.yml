@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: 夜袭系统
+  profiles:
+    active: dev
